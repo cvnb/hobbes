@@ -3329,7 +3329,7 @@ yyreduce:
 
   case 113:
 #line 660 "hexpr.y" /* yacc.c:1646  */
-    { (yyval.exp) = compileMatch(yyParseCC, *(yyvsp[-2].exps), normPatternRules(*(yyvsp[0].patternexps), m((yylsp[-3]),(yylsp[0]))), m((yylsp[-3]),(yylsp[0])))->clone(); }
+    { (yyval.exp) = compileLazyMatch(yyParseCC, *(yyvsp[-2].exps), normPatternRules(*(yyvsp[0].patternexps), m((yylsp[-3]),(yylsp[0]))), m((yylsp[-3]),(yylsp[0])))->clone(); }
 #line 3334 "hexpr.parse.C" /* yacc.c:1646  */
     break;
 

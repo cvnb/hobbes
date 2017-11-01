@@ -614,7 +614,7 @@ void assignNames(const str::seq& vns, PatternRows& ps, bool* mappedVs) {
   }
 }
 
-ExprPtr compileMatch(cc* c, const Exprs& es, const PatternRows& ps, const LexicalAnnotation& rootLA) {
+ExprPtr compileLazyMatch(cc* c, const Exprs& es, const PatternRows& ps, const LexicalAnnotation& rootLA) {
   validate(c->typeEnv(), es.size(), ps, rootLA);
 
   // make variables to store each of the expressions being matched
@@ -625,7 +625,27 @@ ExprPtr compileMatch(cc* c, const Exprs& es, const PatternRows& ps, const Lexica
   assignNames(vns, const_cast<PatternRows&>(ps), &mappedVs);
 
   // produce a match expression from the DFA induced by these patterns
-  return inLetExp(vns, es, liftDFAExpr(c, ps, rootLA), rootLA);
+  return liftDFAExpr(c, es, ps, rootLA);
+}
+
+ExprPtr compileMatch(cc* c, const Exprs& es, const PatternRows& ps, const LexicalAnnotation& rootLA) {
+  validate(c->typeEnv(), es.size(), ps, rootLA);
+
+  // make variables to store each of the expressions being matched
+  str::seq vns;
+  Exprs    vs;
+  for (size_t i = 0; i < es.size(); ++i) {
+    auto n = freshName();
+    vns.push_back(n);
+    vs.push_back(var(n, rootLA));
+  }
+
+  // push these variable names through pattern rows (assign explicit names to every step of pattern matching)
+  bool mappedVs = false;
+  assignNames(vns, const_cast<PatternRows&>(ps), &mappedVs);
+
+  // produce a match expression from the DFA induced by these patterns
+  return inLetExp(vns, es, liftDFAExpr(c, vs, ps, rootLA), rootLA);
 }
 
 ExprPtr compileMatchTest(cc* c, const ExprPtr& e, const PatternPtr& p, const LexicalAnnotation& rootLA) {

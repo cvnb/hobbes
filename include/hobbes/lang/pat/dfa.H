@@ -173,6 +173,8 @@ typedef std::unordered_map<PatternRows, stateidx_t, hobbes::genHash<PatternRows>
 
 typedef std::unordered_map<Expr*, size_t> ExprIdxs; // map back from result expressions to row IDs
 
+typedef std::unordered_map<std::string, ExprPtr> DroppedExprs; // remember the names of expressions that have been dropped (in case we need to load them)
+
 struct MDFA {
   // the lexical extent of the whole match in the original source program
   LexicalAnnotation rootLA;
@@ -182,6 +184,7 @@ struct MDFA {
   StatesIdx      statesIdx;
   TableCfgStates tableCfgStates;
   ExprIdxs       exprIdxs;
+  DroppedExprs   droppedExprs;
   bool           inPrimSel;
 
   str::set rootVars;
@@ -198,10 +201,10 @@ struct MDFA {
   FoldedStateCalls foldedStateCalls;
 };
 
-stateidx_t makeDFA(MDFA*, const PatternRows&, const LexicalAnnotation&);
-stateidx_t makeDFAState(MDFA* dfa, const PatternRows& ps);
+stateidx_t makeDFA(MDFA*, const Exprs&, const PatternRows&, const LexicalAnnotation&);
+stateidx_t makeDFAState(MDFA* dfa, const Exprs&, const PatternRows& ps);
 
-ExprPtr liftDFAExpr(cc*, const PatternRows&, const LexicalAnnotation&);
+ExprPtr liftDFAExpr(cc*, const Exprs&, const PatternRows&, const LexicalAnnotation&);
 
 }
 

@@ -44,6 +44,9 @@ ExprPtr compileMatch(cc*, const Exprs&, const PatternRows&, const LexicalAnnotat
 // produce an expression to test whether an expression matches a single pattern
 ExprPtr compileMatchTest(cc*, const ExprPtr&, const PatternPtr&, const LexicalAnnotation&);
 
+// minimize evaluation in a derived match table (evaluate just what's necessary to find the first matching row)
+ExprPtr compileLazyMatch(cc*, const Exprs&, const PatternRows&, const LexicalAnnotation&);
+
 // a general representation of patterns to match
 class Pattern : public LexicallyAnnotated {
 public:

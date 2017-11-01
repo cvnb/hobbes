@@ -16,6 +16,10 @@ TEST(Matching, Basic) {
   EXPECT_EQ(c().compileFn<int()>("let (x, y) = (1, 2) in x + y")(), 3);
 }
 
+TEST(Matching, ShortCircuits) {
+  EXPECT_EQ(c().compileFn<int()>("let p=newPrim()::{x:int};_=(p.x<-1) in match (p.x<-2) 1 with | _ 1 -> p.x | _ _ -> 0")(), 1);
+}
+
 TEST(Matching, Strings) {
   EXPECT_EQ(c().compileFn<int()>("match \"foo\" with | \"fox\" -> 1 | \"for\" -> 2 | _ -> 3")(), 3);
 

@@ -657,7 +657,7 @@ l4expr: "if" l4expr "then" l4expr "else" l4expr { $$ = TAPP3(var("if",m(@1)), $2
       | "let" letbindings ";" "in" l0expr { $$ = compileNestedLetMatch(*$2, ExprPtr($5), m(@1,@5))->clone(); }
 
       /* pattern matching */
-      | "match" l6exprs "with" patternexps { $$ = compileMatch(yyParseCC, *$2, normPatternRules(*$4, m(@1,@4)), m(@1,@4))->clone(); }
+      | "match" l6exprs "with" patternexps { $$ = compileLazyMatch(yyParseCC, *$2, normPatternRules(*$4, m(@1,@4)), m(@1,@4))->clone(); }
 
       /* match test */
       | l5expr "matches" pattern { $$ = compileMatchTest(yyParseCC, ExprPtr($1), PatternPtr($3), m(@1,@3))->clone(); }
